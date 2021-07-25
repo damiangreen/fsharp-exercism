@@ -23,19 +23,19 @@ let main argv =
     let n = argv.[0] |> int
     let noRemainder divisor = n % divisor = 0
 
-    let p = noRemainder 3
-    let pl = noRemainder 5
-    let plo = noRemainder 7
+    let lookup = [ 3, "Pling"; 5, "Plang"; 7, "Plong" ]
 
-    let plingIt = if p then "Pling" else ""
-    let plangIt = if pl then "Plang" else ""
-    let plongIt = if plo then "Plong" else ""
+    let words =
+        lookup
+        |> List.map (fun (k, v) -> (if (noRemainder k) then v else ""))
+        |> List.filter (fun x -> x <> "") // could this be done more efficiently with a fold or reduce?
+        |> String.Concat
 
-    let digits =
-        if not p && not pl && not plo then
-            n |> string
-        else
-            ""
+    printf
+        "%s"
+        (if words.Length = 0 then
+             n |> string
+         else
+             words)
 
-    printf "%s%s%s%s" plingIt plangIt plongIt digits
     0 // return an integer exit code
