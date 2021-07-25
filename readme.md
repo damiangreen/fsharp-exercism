@@ -1,0 +1,1 @@
+Learning F# By examples from https://exercism.io/my/tracks/fsharp
