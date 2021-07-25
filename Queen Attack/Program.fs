@@ -1,32 +1,32 @@
-// Learn more about F# at http://docs.microsoft.com/dotnet/fsharp
-
 open System
 
 [<EntryPoint>]
 let main argv =
-    let random = new System.Random()
+    let random = Random()
 
-    let makeRandomPos () =
-        [ random.Next(0, 8); random.Next(0, 8) ]
+    let makeRandomPos () = (random.Next(0, 8), random.Next(0, 8))
 
-    let w = makeRandomPos ()
-    let b = makeRandomPos ()
-    let dx = abs (b.[0] - w.[0])
-    let dy = abs (b.[1] - w.[1])
-    printfn "WHITE: %d,%d" w.[0] w.[1]
-    printfn "BLACK: %d,%d" b.[0] b.[1]
-    printfn "Matched horizontal or vertical: %b" ((w.[0] = b.[0]) || (w.[1] = b.[1]))
-    printfn "Matched diagonal: %b" (dx = dy)
+    let (wx, wy) = makeRandomPos ()
+    let (bx, by) = makeRandomPos ()
 
-    let posMatchesWhite x y = x = w.[0] && y = w.[1]
-    let posMatchesBlack x y = x = b.[0] && y = b.[1]
+    printfn "WHITE: %d,%d" wx wy
+    printfn "BLACK: %d,%d" bx by
+    printfn "Matched horizontal or vertical: %b" ((wx = bx) || (wy = by))
+    printfn "Matched diagonal: %b" (abs (bx - wx) = abs (by - wy))
 
-    for i = 0 to 7 do
+    let posMatchesWhite (x, y) = x = wx && y = wy
+    let posMatchesBlack (x, y) = x = bx && y = by
+
+    for i in 0 .. 7 do
         printf "\n"
 
-        for j = 0 to 7 do
-            if posMatchesWhite i j then printf "W"
-            elif posMatchesBlack i j then printf "B"
-            else printf "-"
+        for j in 0 .. 7 do
+            let pos = (i, j)
 
-    0 // return an integer exit code
+            match pos with
+            | pos when posMatchesWhite pos -> "W"
+            | pos when posMatchesBlack pos -> "B"
+            | _ -> "-"
+            |> printf "%s"
+
+    0
